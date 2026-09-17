@@ -13,7 +13,8 @@
   --bg-raised: #0d0d0d;
   --text: #ededee;
   --text-dim: #8b9097;
-  --text-faint: #5c6066;
+  /* 5.0:1 на чёрном — тише основного текста, но проходит WCAG AA */
+  --text-faint: #797e86;
   --rule: rgba(255, 255, 255, 0.14);
   --rule-soft: rgba(255, 255, 255, 0.08);
   --signal: #ff4a1c;

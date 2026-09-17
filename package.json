@@ -17,6 +17,8 @@
     "astro": "^7.3.3"
   },
   "devDependencies": {
+    "jsqr": "^1.4.0",
+    "lighthouse": "^13.4.1",
     "playwright": "^1.63.0",
     "qrcode": "^1.5.4",
     "sharp": "^0.35.4",
