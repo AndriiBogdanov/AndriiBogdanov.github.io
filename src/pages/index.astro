@@ -114,11 +114,27 @@ function shotFor(id: string) {
       <div class="section__head">
         <h2 class="section__title" id="contact-title">Keep in touch</h2>
       </div>
-      <div class="contact__grid">
-        <button class="btn btn--solid" type="button" data-vcard>Save contact</button>
-        <a class="btn" href={social.linkedin} rel="me noopener" target="_blank">LinkedIn</a>
-        <a class="btn" href="#" data-link="whatsapp" rel="noopener" target="_blank">WhatsApp</a>
-        <a class="btn" href="#" data-link="email">Email</a>
+      <button class="btn btn--solid btn--block" type="button" data-vcard>Save contact</button>
+
+      <div class="more contact__list">
+        <a class="more__item" href="#" data-link="whatsapp" rel="noopener" target="_blank">
+          <span class="more__num">01</span>
+          <span class="more__title">WhatsApp</span>
+          <span class="more__arrow" aria-hidden="true">↗</span>
+          <span class="more__kind">Fastest way to reach me</span>
+        </a>
+        <a class="more__item" href={social.linkedin} rel="me noopener" target="_blank">
+          <span class="more__num">02</span>
+          <span class="more__title">LinkedIn</span>
+          <span class="more__arrow" aria-hidden="true">↗</span>
+          <span class="more__kind">Work history and background</span>
+        </a>
+        <a class="more__item" href="#" data-link="email">
+          <span class="more__num">03</span>
+          <span class="more__title">Email</span>
+          <span class="more__arrow" aria-hidden="true">↗</span>
+          <span class="more__kind">For briefs, quotes and documents</span>
+        </a>
       </div>
       <div class="contact__minor">
         <a href={social.instagram} rel="me noopener" target="_blank">Instagram</a>
