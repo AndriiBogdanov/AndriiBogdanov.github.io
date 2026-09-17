@@ -20,7 +20,7 @@ function shotFor(id: string) {
   path="/"
   progress={true}
 >
-  <main>
+  <main id="top">
     <header class="hero wrap reveal">
       <h1 class="hero__name">
         {profile.nameLines.map((line) => <span>{line}</span>)}
@@ -145,13 +145,9 @@ function shotFor(id: string) {
 
     <footer class="footer wrap">
       <span>© {new Date().getFullYear()} {profile.name}</span>
-      <span>{profile.location}</span>
+      <a class="footer__top" href="#top">Back to top <span aria-hidden="true">↑</span></a>
     </footer>
   </main>
-
-  <button class="to-top" type="button" data-to-top aria-label="Back to top" hidden>
-    <span aria-hidden="true">↑</span>
-  </button>
 
   <script
     is:inline
@@ -216,30 +212,6 @@ function shotFor(id: string) {
           }, 4000);
         });
       });
-
-      // «наверх» показывается, когда добрались до блока контактов
-      var toTop = document.querySelector('[data-to-top]');
-      var contact = document.getElementById('contact-title');
-      if (toTop && contact && 'IntersectionObserver' in window) {
-        toTop.hidden = false;
-        new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              if (entry.isIntersecting) {
-                toTop.setAttribute('data-visible', '');
-              } else {
-                toTop.removeAttribute('data-visible');
-              }
-            });
-          },
-          { rootMargin: '0px 0px -30% 0px' },
-        ).observe(contact);
-
-        toTop.addEventListener('click', function () {
-          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-        });
-      }
 
       // тёплое пятно под курсором на кнопках (на тач-экранах просто не сработает)
       if (window.matchMedia('(hover: hover)').matches) {
