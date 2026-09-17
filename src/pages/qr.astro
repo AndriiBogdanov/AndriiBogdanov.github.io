@@ -1,0 +1,34 @@
+---
+import QRCode from 'qrcode';
+import Base from '../layouts/Base.astro';
+import { profile } from '../data/profile';
+
+// Генерируется на сборке: в рантайме ни библиотеки, ни запроса за картинкой.
+const qrSvg = await QRCode.toString(profile.siteUrl, {
+  type: 'svg',
+  errorCorrectionLevel: 'H',
+  margin: 1,
+  color: { dark: '#000000', light: '#ffffff' },
+});
+---
+
+<Base
+  title="Andrii Bogdanov — scan to connect"
+  description="Scan the code to open the contact card of Andrii Bogdanov, web developer and designer in Berlin."
+  path="/qr/"
+  noindex={true}
+>
+  <main class="qr-page">
+    <div>
+      <h1 class="qr-page__name">{profile.name}</h1>
+      <p class="qr-page__role">{profile.role} · {profile.location}</p>
+    </div>
+
+    <div class="qr-card" set:html={qrSvg} />
+
+    <div>
+      <p class="qr-page__hint">Scan to connect</p>
+      <a class="qr-page__back" href="/">Back to the card</a>
+    </div>
+  </main>
+</Base>

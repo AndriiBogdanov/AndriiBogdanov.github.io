@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+import { profile, social } from '../data/profile';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  noindex?: boolean;
+}
+
+const { title, description, path = '/', noindex = false } = Astro.props;
+const canonical = new URL(path, Astro.site ?? profile.siteUrl).href;
+const ogImage = new URL('/og.png', Astro.site ?? profile.siteUrl).href;
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  jobTitle: profile.role,
+  url: profile.siteUrl,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Berlin',
+    addressCountry: 'DE',
+  },
+  sameAs: [social.linkedin, social.instagram],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <link
+      rel="preload"
+      href="/fonts/archivo-subset.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

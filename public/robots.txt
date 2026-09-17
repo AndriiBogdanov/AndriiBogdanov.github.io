@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /qr/
+
+Sitemap: https://andriibogdanov.github.io/sitemap.xml

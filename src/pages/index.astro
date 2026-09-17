@@ -1,0 +1,212 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { profile, selectedWork, moreWork, social, encoded } from '../data/profile';
+
+const shots = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/work/*.{webp,png,jpg,jpeg}',
+  { eager: true },
+);
+
+function shotFor(id: string) {
+  const key = Object.keys(shots).find((p) => p.includes(`/${id}.`));
+  return key ? shots[key]!.default : undefined;
+}
+---
+
+<Base
+  title="Andrii Bogdanov — Web Developer & Designer, Berlin"
+  description="Web developer and designer based in Berlin. Selected work for studios, labels, retailers and artists. Save my contact in one tap."
+  path="/"
+>
+  <main>
+    <header class="hero wrap reveal">
+      <h1 class="hero__name">
+        {profile.nameLines.map((line) => <span>{line}</span>)}
+      </h1>
+      <div>
+        <p class="hero__role">{profile.role}</p>
+        <p class="hero__location">{profile.location}</p>
+      </div>
+      <p class="hero__intro">{profile.intro}</p>
+      <div class="actions">
+        <button class="btn btn--solid" type="button" data-vcard>Save contact</button>
+        <a class="btn" href={social.linkedin} rel="me noopener" target="_blank">LinkedIn</a>
+        <a class="btn" href="#" data-link="whatsapp" rel="noopener" target="_blank">WhatsApp</a>
+      </div>
+    </header>
+
+    <p class="skills wrap">{profile.skills.join(' · ')}</p>
+
+    <section class="section wrap" aria-labelledby="work-title">
+      <div class="section__head">
+        <h2 class="section__title" id="work-title">Selected work</h2>
+      </div>
+
+      <div class="work">
+        {
+          selectedWork.map((p) => {
+            const shot = shotFor(p.id);
+            return (
+              <a class="project" href={p.url} target="_blank" rel="noopener">
+                <div class="project__shot">
+                  {shot && (
+                    <Image
+                      src={shot}
+                      alt={`${p.title} website`}
+                      widths={[480, 720, 1080]}
+                      sizes="(min-width: 46rem) 42rem, 100vw"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+                </div>
+                <div class="project__head">
+                  <span class="project__num">{p.num}</span>
+                  <h3 class="project__title">{p.title}</h3>
+                  {p.badge && <span class="badge">{p.badge}</span>}
+                </div>
+                <p class="project__kind">{p.kind}</p>
+                <p class="project__desc">{p.description}</p>
+                <span class="project__cta">View project ↗</span>
+              </a>
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <section class="section wrap" aria-labelledby="more-title">
+      <div class="section__head">
+        <h2 class="section__title" id="more-title">More work</h2>
+      </div>
+      <div class="more">
+        {
+          moreWork.map((p) => (
+            <a class="more__item" href={p.url} target="_blank" rel="noopener">
+              <span class="more__num">{p.num}</span>
+              <span class="more__title">{p.title}</span>
+              <span class="more__arrow" aria-hidden="true">
+                ↗
+              </span>
+              <span class="more__kind">{p.kind}</span>
+              {p.badge && <span class="badge more__badge">{p.badge}</span>}
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section wrap" aria-labelledby="contact-title">
+      <div class="section__head">
+        <h2 class="section__title" id="contact-title">Keep in touch</h2>
+      </div>
+      <div class="contact__grid">
+        <button class="btn btn--solid" type="button" data-vcard>Save contact</button>
+        <a class="btn" href={social.linkedin} rel="me noopener" target="_blank">LinkedIn</a>
+        <a class="btn" href="#" data-link="whatsapp" rel="noopener" target="_blank">WhatsApp</a>
+        <a class="btn" href="#" data-link="email">Email</a>
+      </div>
+      <div class="contact__minor">
+        <a href={social.instagram} rel="me noopener" target="_blank">Instagram</a>
+        <button type="button" data-share>Share this card</button>
+        <a href="/qr/">Show QR</a>
+      </div>
+    </section>
+
+    <footer class="footer wrap">
+      <span>© {new Date().getFullYear()} {profile.name}</span>
+      <span>{profile.location}</span>
+    </footer>
+  </main>
+
+  <script
+    is:inline
+    define:vars={{
+      enc: encoded,
+      site: profile.siteUrl,
+      linkedin: social.linkedin,
+      instagram: social.instagram,
+    }}
+  >
+    (function () {
+      var d = function (s) {
+        try {
+          return atob(s);
+        } catch (e) {
+          return '';
+        }
+      };
+      var tel1 = d(enc.phonePrimary);
+      var tel2 = d(enc.phoneSecondary);
+      var mail = d(enc.email);
+      var wa = d(enc.whatsapp);
+
+      document.querySelectorAll('[data-link="whatsapp"]').forEach(function (el) {
+        el.href = 'https://wa.me/' + wa;
+      });
+      document.querySelectorAll('[data-link="email"]').forEach(function (el) {
+        el.href = 'mailto:' + mail;
+      });
+
+      function vcard() {
+        return [
+          'BEGIN:VCARD',
+          'VERSION:3.0',
+          'N:Bogdanov;Andrii;;;',
+          'FN:Andrii Bogdanov',
+          'TITLE:Web Developer & Designer',
+          'TEL;TYPE=CELL,VOICE,PREF:' + tel1,
+          'TEL;TYPE=CELL,VOICE:' + tel2,
+          'EMAIL;TYPE=INTERNET,PREF:' + mail,
+          'URL:' + site,
+          'URL:' + linkedin,
+          'URL:' + instagram,
+          'ADR;TYPE=WORK:;;;Berlin;;;Germany',
+          'NOTE:Web development, UI/UX, digital design, SEO, integrations & automation.',
+          'END:VCARD',
+        ].join('\r\n');
+      }
+
+      document.querySelectorAll('[data-vcard]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var blob = new Blob([vcard()], { type: 'text/vcard;charset=utf-8' });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'Andrii-Bogdanov.vcf';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(function () {
+            URL.revokeObjectURL(url);
+          }, 4000);
+        });
+      });
+
+      document.querySelectorAll('[data-share]').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+          var data = { title: 'Andrii Bogdanov', text: 'Web Developer & Designer, Berlin', url: site };
+          if (navigator.share) {
+            try {
+              await navigator.share(data);
+              return;
+            } catch (e) {
+              if (e && e.name === 'AbortError') return;
+            }
+          }
+          try {
+            await navigator.clipboard.writeText(site);
+            var prev = btn.textContent;
+            btn.textContent = 'Link copied';
+            setTimeout(function () {
+              btn.textContent = prev;
+            }, 1800);
+          } catch (e) {
+            window.prompt('Copy this link', site);
+          }
+        });
+      });
+    })();
+  </script>
+</Base>

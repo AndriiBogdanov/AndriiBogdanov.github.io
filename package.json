@@ -1,0 +1,25 @@
+{
+  "name": "andrii-card",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "QR business card — Andrii Bogdanov",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "qr": "node scripts/make-qr.mjs",
+    "shots": "node scripts/shoot.mjs",
+    "audit": "node scripts/audit.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.3.3"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.4",
+    "subset-font": "^2.7.0"
+  }
+}

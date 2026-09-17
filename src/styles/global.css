@@ -1,0 +1,558 @@
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo-subset.woff2') format('woff2-variations');
+  font-weight: 400 700;
+  font-stretch: 62% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* чистый чёрный, а не тонированный: на OLED-телефоне страница сливается с рамкой */
+  --bg: #000000;
+  --bg-raised: #0d0d0d;
+  --text: #ededee;
+  --text-dim: #8b9097;
+  --text-faint: #5c6066;
+  --rule: rgba(255, 255, 255, 0.14);
+  --rule-soft: rgba(255, 255, 255, 0.08);
+  --signal: #ff4a1c;
+
+  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+  --measure: 38rem;
+  --stack: clamp(3rem, 9vw, 5rem);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--signal);
+  color: #000;
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--rule-soft);
+  margin: 0;
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  padding-block: clamp(2.5rem, 9vw, 5rem) clamp(2.5rem, 8vw, 4rem);
+}
+
+/* Размер подобран так, чтобы длинное слово «BOGDANOV» ложилось точно
+   по ширине колонки на телефоне и не упиралось в край на десктопе. */
+.hero__name {
+  margin: 0;
+  font-weight: 700;
+  font-stretch: 118%;
+  font-size: min(12.9vw, 6.15rem);
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.hero__name span {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+}
+
+/* Короткая строка разряжается до ширины длинной: имя читается как один блок,
+   а не как две случайно обрезанные строки. Хвостовой трекинг компенсируется. */
+.hero__name span:first-child {
+  letter-spacing: 0.45em;
+  margin-right: -0.45em;
+}
+
+.hero__role {
+  margin: clamp(1.25rem, 4vw, 1.75rem) 0 0;
+  font-size: clamp(1.05rem, 4.4vw, 1.4rem);
+  font-weight: 500;
+  font-stretch: 105%;
+  letter-spacing: -0.01em;
+}
+
+.hero__location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.15rem 0 0;
+  font-size: clamp(1.05rem, 4.4vw, 1.4rem);
+  font-weight: 400;
+  color: var(--text-dim);
+  letter-spacing: -0.01em;
+}
+
+/* единственное цветное пятно на странице */
+.hero__location::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--signal);
+  flex: none;
+}
+
+.hero__intro {
+  margin: clamp(1.5rem, 5vw, 2rem) 0 0;
+  max-width: var(--measure);
+  font-size: clamp(1rem, 4vw, 1.15rem);
+  color: var(--text);
+}
+
+/* ---------- actions ---------- */
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-top: clamp(1.75rem, 6vw, 2.25rem);
+}
+
+.actions > :first-child {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 30rem) {
+  .actions {
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+  }
+
+  .actions > :first-child {
+    grid-column: auto;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+  font: inherit;
+  font-weight: 500;
+  font-size: 0.975rem;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.btn--solid {
+  background: var(--text);
+  color: #000;
+  border-color: var(--text);
+  font-weight: 600;
+}
+
+.btn--solid:hover {
+  background: #fff;
+  border-color: #fff;
+}
+
+.btn--wide {
+  flex: 1 1 100%;
+}
+
+/* ---------- skills strip ---------- */
+
+.skills {
+  padding-block: clamp(1.5rem, 5vw, 2rem);
+  border-top: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--text-dim);
+  font-size: clamp(0.9rem, 3.5vw, 1rem);
+  line-height: 1.7;
+}
+
+/* ---------- sections ---------- */
+
+.section {
+  padding-block: var(--stack);
+}
+
+.section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(1.75rem, 6vw, 2.5rem);
+}
+
+.section__title {
+  margin: 0;
+  font-size: clamp(1.35rem, 5.5vw, 1.75rem);
+  font-weight: 600;
+  font-stretch: 110%;
+  letter-spacing: -0.02em;
+}
+
+.section__count {
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- work ---------- */
+
+.work {
+  display: grid;
+  gap: clamp(3rem, 10vw, 4.5rem);
+}
+
+.project {
+  display: block;
+  text-decoration: none;
+}
+
+.project__shot {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--rule-soft);
+  background: var(--bg-raised);
+}
+
+.project__shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.project:hover .project__shot img {
+  transform: scale(1.02);
+}
+
+.project__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-top: 1.1rem;
+}
+
+.project__num {
+  color: var(--text-faint);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+.project__title {
+  margin: 0;
+  font-size: clamp(1.45rem, 6vw, 2rem);
+  font-weight: 600;
+  font-stretch: 112%;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.badge {
+  align-self: center;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.project__kind {
+  margin: 0.35rem 0 0;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.project__desc {
+  margin: 0.85rem 0 0;
+  max-width: var(--measure);
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.project__cta {
+  display: inline-block;
+  margin-top: 0.9rem;
+  font-size: 0.975rem;
+  font-weight: 500;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 2px;
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+
+.project:hover .project__cta {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+
+/* ---------- more work ---------- */
+
+.more {
+  display: grid;
+}
+
+.more__item {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  padding-block: 1.15rem;
+  border-top: 1px solid var(--rule-soft);
+  text-decoration: none;
+  transition: background-color 0.18s ease;
+}
+
+.more__item:last-child {
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.more__num {
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.more__title {
+  font-size: clamp(1.05rem, 4.4vw, 1.2rem);
+  font-weight: 600;
+  font-stretch: 108%;
+  letter-spacing: -0.015em;
+}
+
+.more__kind {
+  grid-column: 2 / -1;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.more__arrow {
+  color: var(--text-faint);
+  font-size: 1rem;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.more__item:hover .more__arrow {
+  color: var(--signal);
+  transform: translate(2px, -2px);
+}
+
+.more__badge {
+  grid-column: 2 / -1;
+  justify-self: start;
+  margin-top: 0.35rem;
+}
+
+/* ---------- contact ---------- */
+
+.contact__grid {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.contact__minor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.contact__minor a,
+.contact__minor button {
+  color: var(--text-dim);
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.contact__minor a:hover,
+.contact__minor button:hover {
+  color: var(--text);
+  border-bottom-color: var(--rule);
+}
+
+.footer {
+  padding-block: 2.5rem 3rem;
+  border-top: 1px solid var(--rule-soft);
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  justify-content: space-between;
+}
+
+.footer a {
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+/* ---------- qr page ---------- */
+
+.qr-page {
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: clamp(1.5rem, 5vw, 2.25rem);
+  padding: clamp(1.75rem, 7vw, 3rem) var(--gutter)
+    calc(clamp(1.75rem, 7vw, 3rem) + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+}
+
+.qr-page__name {
+  margin: 0;
+  font-size: clamp(1.75rem, 9vw, 3rem);
+  font-weight: 700;
+  font-stretch: 118%;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+}
+
+.qr-page__role {
+  margin: 0.4rem 0 0;
+  color: var(--text-dim);
+  font-size: clamp(0.95rem, 4vw, 1.1rem);
+}
+
+.qr-card {
+  place-self: center;
+  width: min(100%, 26rem);
+  aspect-ratio: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: clamp(1rem, 4vw, 1.5rem);
+  display: grid;
+  place-items: center;
+}
+
+.qr-card svg,
+.qr-card img {
+  width: 100%;
+  height: 100%;
+}
+
+.qr-page__hint {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: clamp(0.95rem, 4vw, 1.05rem);
+}
+
+.qr-page__back {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+/* ---------- single orchestrated entrance ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal > * {
+    animation: rise 0.7s cubic-bezier(0.22, 0.75, 0.25, 1) backwards;
+  }
+
+  .reveal > *:nth-child(1) {
+    animation-delay: 0.04s;
+  }
+  .reveal > *:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+  .reveal > *:nth-child(3) {
+    animation-delay: 0.18s;
+  }
+  .reveal > *:nth-child(4) {
+    animation-delay: 0.24s;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.6rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@media (min-width: 46rem) {
+  .hero {
+    padding-block: clamp(4rem, 8vw, 6.5rem) 4rem;
+  }
+
+  .contact__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
