@@ -18,6 +18,7 @@ function shotFor(id: string) {
   title="Andrii Bogdanov — Web Developer & Designer, Berlin"
   description="Web developer and designer based in Berlin. Selected work for studios, labels, retailers and artists. Save my contact in one tap."
   path="/"
+  progress={true}
 >
   <main>
     <header class="hero wrap reveal">
@@ -36,7 +37,19 @@ function shotFor(id: string) {
       </div>
     </header>
 
-    <p class="skills wrap">{profile.skills.join(' · ')}</p>
+    <div class="skills" aria-label={profile.skills.join(', ')}>
+      <div class="skills__track">
+        {
+          [0, 1].map((copy) => (
+            <span class="skills__row" aria-hidden={copy === 1 ? 'true' : undefined}>
+              {profile.skills.map((s) => (
+                <span class="skills__item">{s}</span>
+              ))}
+            </span>
+          ))
+        }
+      </div>
+    </div>
 
     <section class="section wrap" aria-labelledby="work-title">
       <div class="section__head">
@@ -183,6 +196,17 @@ function shotFor(id: string) {
           }, 4000);
         });
       });
+
+      // тёплое пятно под курсором на кнопках (на тач-экранах просто не сработает)
+      if (window.matchMedia('(hover: hover)').matches) {
+        document.querySelectorAll('.btn').forEach(function (btn) {
+          btn.addEventListener('pointermove', function (e) {
+            var r = btn.getBoundingClientRect();
+            btn.style.setProperty('--mx', e.clientX - r.left + 'px');
+            btn.style.setProperty('--my', e.clientY - r.top + 'px');
+          });
+        });
+      }
 
       document.querySelectorAll('[data-share]').forEach(function (btn) {
         btn.addEventListener('click', async function () {

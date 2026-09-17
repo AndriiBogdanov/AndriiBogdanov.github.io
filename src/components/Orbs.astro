@@ -1,0 +1,25 @@
+---
+// Фоновые орбы — тот же приём, что в KLAPP/Art.PRO: радиальный градиент,
+// сильный blur, медленный дрейф с разными задержками. Здесь тёплый сигнальный
+// и холодный зелёный на чистом чёрном; плюс плёночное зерно поверх, чтобы
+// градиенты не выглядели пластиковыми.
+const orbs = [
+  { cls: 'orb--a', color: 'rgba(255, 74, 28, 0.95)' },
+  { cls: 'orb--b', color: 'rgba(25, 224, 138, 0.7)' },
+  { cls: 'orb--c', color: 'rgba(255, 90, 32, 0.8)' },
+  { cls: 'orb--d', color: 'rgba(25, 224, 138, 0.52)' },
+  { cls: 'orb--e', color: 'rgba(255, 74, 28, 0.7)' },
+];
+---
+
+<div class="orbs" aria-hidden="true">
+  {
+    orbs.map((o) => (
+      <span
+        class={`orb ${o.cls}`}
+        style={`background: radial-gradient(circle, ${o.color}, transparent 62%)`}
+      />
+    ))
+  }
+  <div class="grain" />
+</div>

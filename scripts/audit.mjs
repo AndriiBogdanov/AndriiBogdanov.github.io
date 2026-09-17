@@ -74,7 +74,8 @@ async function measure(path, label, viewport, isMobile) {
 
   await page.goto(`http://localhost:${PORT}${path}`, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForTimeout(400);
+  // ждём, пока отыграет вступительная сцена (последний элемент стартует на 0.7 с)
+  await page.waitForTimeout(2000);
 
   const initial = bytes;
   await page.screenshot({ path: join(OUT, `${label}-top.png`) });
