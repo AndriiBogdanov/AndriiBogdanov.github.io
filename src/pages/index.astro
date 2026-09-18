@@ -18,7 +18,6 @@ function shotFor(id: string) {
   title="Andrii Bogdanov — Web Developer & Designer, Berlin"
   description="Web developer and designer based in Berlin. Selected work for studios, labels, retailers and artists. Save my contact in one tap."
   path="/"
-  progress={true}
 >
   <main id="top">
     <header class="hero wrap reveal">
@@ -145,9 +144,14 @@ function shotFor(id: string) {
 
     <footer class="footer wrap">
       <span>© {new Date().getFullYear()} {profile.name}</span>
-      <a class="footer__top" href="#top">Back to top <span aria-hidden="true">↑</span></a>
+      <span>{profile.location}</span>
     </footer>
   </main>
+
+  <a class="to-top" href="#top" aria-label="Back to top">
+    <span class="to-top__ring" aria-hidden="true"></span>
+    <span class="to-top__arrow" aria-hidden="true">↑</span>
+  </a>
 
   <script
     is:inline
@@ -212,6 +216,22 @@ function shotFor(id: string) {
           }, 4000);
         });
       });
+
+      // если браузер не умеет scroll-таймлайны — показываем стрелку обычным способом
+      if (!(window.CSS && CSS.supports('animation-timeline: scroll()'))) {
+        var toTop = document.querySelector('.to-top');
+        if (toTop) {
+          var syncToTop = function () {
+            if (window.scrollY > window.innerHeight * 0.6) {
+              toTop.setAttribute('data-visible', '');
+            } else {
+              toTop.removeAttribute('data-visible');
+            }
+          };
+          window.addEventListener('scroll', syncToTop, { passive: true });
+          syncToTop();
+        }
+      }
 
       // тёплое пятно под курсором на кнопках (на тач-экранах просто не сработает)
       if (window.matchMedia('(hover: hover)').matches) {

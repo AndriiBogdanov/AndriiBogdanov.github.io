@@ -8,10 +8,9 @@ interface Props {
   description: string;
   path?: string;
   noindex?: boolean;
-  progress?: boolean;
 }
 
-const { title, description, path = '/', noindex = false, progress = false } = Astro.props;
+const { title, description, path = '/', noindex = false } = Astro.props;
 const canonical = new URL(path, Astro.site ?? profile.siteUrl).href;
 const ogImage = new URL('/og.png', Astro.site ?? profile.siteUrl).href;
 
@@ -63,7 +62,6 @@ const personLd = {
   </head>
   <body>
     <Orbs />
-    {progress && <div class="progress" aria-hidden="true" />}
     <slot />
   </body>
 </html>

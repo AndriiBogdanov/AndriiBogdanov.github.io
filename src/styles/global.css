@@ -119,33 +119,6 @@
   }
 }
 
-/* полоса прочтения страницы: чистый CSS на scroll-таймлайне, без JS.
-   Там, где таймлайнов нет, она просто не видна. */
-.progress {
-  position: fixed;
-  inset: 0 0 auto;
-  height: 2px;
-  z-index: 10;
-  background: linear-gradient(90deg, var(--signal), #19e08a);
-  transform-origin: 0 50%;
-  scale: 0 1;
-}
-
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .progress {
-      animation: progress linear both;
-      animation-timeline: scroll(root block);
-    }
-
-    @keyframes progress {
-      to {
-        scale: 1 1;
-      }
-    }
-  }
-}
-
 /* плёночное зерно: снимает «пластиковость» больших градиентов */
 .grain {
   position: absolute;
@@ -645,7 +618,8 @@ a {
 }
 
 .footer {
-  padding-block: 2.5rem calc(3rem + env(safe-area-inset-bottom, 0px));
+  /* снизу оставлено место под плавающую стрелку */
+  padding-block: 2.5rem calc(5.25rem + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--rule-soft);
   color: var(--text-faint);
   font-size: 0.85rem;
@@ -660,19 +634,105 @@ a {
   border-bottom: 1px solid var(--rule-soft);
 }
 
-/* возврат наверх живёт в футере строкой, а не плавающим пузырём */
-.footer__top {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: var(--text-dim);
-  border-bottom: 1px solid transparent;
-  transition: color 0.18s ease, border-color 0.18s ease;
+/* ---------- стрелка наверх ----------
+   Кольцо вокруг стрелки — прогресс чтения страницы: элемент не просто «вверх»,
+   он показывает, сколько осталось. Появление и заполнение кольца идут по
+   scroll-таймлайну, каждое своей анимацией на своём слое: минификатор
+   выбрасывает animation-timeline, если в одном правиле две анимации. */
+
+@property --read {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
 }
 
-.footer__top:hover {
+.to-top {
+  position: fixed;
+  right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
   color: var(--text);
-  border-bottom-color: var(--rule);
+  font-size: 1.1rem;
+  line-height: 1;
+  text-decoration: none;
+  opacity: 0;
+  pointer-events: none;
+  translate: 0 0.75rem;
+}
+
+.to-top__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(var(--signal) var(--read), rgba(255, 255, 255, 0.16) 0);
+}
+
+/* тёмная сердцевина: от кольца остаётся только ободок */
+.to-top__ring::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: rgba(8, 8, 8, 0.82);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.to-top__arrow {
+  position: relative;
+  transition: translate 0.2s ease;
+}
+
+.to-top:hover .to-top__arrow {
+  translate: 0 -2px;
+}
+
+.to-top[data-visible] {
+  opacity: 1;
+  pointer-events: auto;
+  translate: 0 0;
+  transition: opacity 0.3s ease, translate 0.3s ease;
+}
+
+@supports (animation-timeline: scroll()) {
+  .to-top {
+    animation-name: to-top-show;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+    animation-timeline: scroll(root block);
+    animation-range: 0 18%;
+  }
+
+  .to-top__ring {
+    animation-name: to-top-read;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+    animation-timeline: scroll(root block);
+  }
+
+  @keyframes to-top-show {
+    from {
+      opacity: 0;
+      pointer-events: none;
+      translate: 0 0.75rem;
+    }
+    to {
+      opacity: 1;
+      pointer-events: auto;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes to-top-read {
+    to {
+      --read: 100%;
+    }
+  }
 }
 
 /* ---------- qr page ---------- */

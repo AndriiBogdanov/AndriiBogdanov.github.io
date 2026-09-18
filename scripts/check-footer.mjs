@@ -1,0 +1,13 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+const p = await ctx.newPage();
+await p.goto('https://andriibogdanov.github.io/', { waitUntil: 'load' });
+await p.evaluate(() => document.fonts.ready);
+await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+await p.waitForTimeout(800);
+await p.screenshot({ path: 'audit/live-footer.png' });
+await p.locator('.footer__top').click();
+await p.waitForTimeout(1500);
+console.log('после клика «Back to top» scrollY =', await p.evaluate(() => Math.round(window.scrollY)));
+await b.close();
